@@ -1,24 +1,13 @@
+// layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Comfortaa } from "next/font/google"; // Added Comfortaa import
+import { Comfortaa } from "next/font/google";
 import "./admin.css";
+import { redirect } from "next/navigation";
 
-// Initialize Geist Sans
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-// Initialize Geist Mono
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Initialize Comfortaa
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
-  subsets: ["latin"], // Comfortaa supports Latin characters
-  weight: ["400", "700"], // Specify the weights you want (Comfortaa supports 300, 400, 500, 600, 700)
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -33,15 +22,14 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function Layout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div id="admin" className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
-        {children}
-    </div>
-        
-  );
+    return (
+        <div id="admin" className={`${comfortaa.variable} antialiased min-h-screen`}>
+          {children}
+        </div>
+    );
 }
