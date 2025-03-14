@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
+import { databaseClient } from '@/utils/tbase/bundler';
 
 type RegisterFormData = {
   email: string;
@@ -25,8 +26,9 @@ export const Register = () => {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    console.log('Regisztrációs adatok:', data);
-    // Itt küldheted el az adatokat egy API-nak, pl. fetch vagy axios segítségével
+    databaseClient.signUpSuper(data.email, data.password, (asd : any) => {
+      console.log('Regisztrációs adatok:', asd);
+    })
   };
 
   const password = watch('password'); // Jelszó figyelése az egyezés ellenőrzéséhez
