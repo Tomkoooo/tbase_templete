@@ -2,16 +2,16 @@
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import next from "next";
-import { dev, hostname, port } from "./server/config.js";
+import { dev, hostname, port } from "./dist/config.js";
 import { setupInitialization } from "./server/init.js";
 import { setupAccountHandlers } from "./server/methods/account.js";
 import { setupUsersHandlers } from "./server/methods/users.js";
 import { setupChannelsHandlers } from "./server/methods/channel.js";
 import { setupDatabaseHandlers } from "./server/methods/database.js";
-import { setupNotificationHandlers } from "./server/methods/notification.js";
-import { setupBucketHandlers } from "./server/methods/bucket.js";
-import { setupPermissionHandlers } from "./server/methods/permission.js";
-import { setupTeamHandlers } from "./server/methods/teams.js"; // Teams handler importálása
+import { setupNotificationHandlers } from "./server/socket/notification.js";
+import { setupBucketHandlers } from "./server/socket/bucket.js";
+import { setupPermissionHandlers } from "./server/socket/permission.js";
+import { setupTeamHandlers } from "./server/socket/teams.js"; // Teams handler importálása
 
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();

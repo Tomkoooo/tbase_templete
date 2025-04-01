@@ -1,29 +1,23 @@
-//EXAMPLE for server-side authentication and server side usage of the database class in NextJs
-import {Database, MongoDB, MySQLDB} from './dist/database';
+import { MongoDB } from '../../../server/database/mongodb';
 
-export const database = new Database() //define inside class for mongodb or mysql
+// MongoDB inicializálása
+export const database = new MongoDB();
 
-{
-    /*
-    export const database = new Database({
-    new MongoDB({
-      url: process.env.NEXT_PUBLIC_MONGODB_URI || "mongodb://localhost:27017",
-      dbName: process.env.NEXT_PUBLIC_MONGODB_DB || "socket-test",
-    }),
-    */
+const connectionInfo = {
+  url: process.env.MONGODB_URI || "mongodb://localhost:27017",
+  dbName: process.env.MONGODB_DB || "mydb",
+};
+
+database.connect(connectionInfo).then(() => {
+  console.log("Connected to MongoDB");
+}).catch((err) => {
+  console.error("Failed to connect to MongoDB:", err);
+});
+
+// Exportáljuk a socket handler-ek számára
+export function getDatabase() {
+  if (!database.db) {
+    throw new Error("Database not initialized");
+  }
+  return database;
 }
-
-{/*
-    export const mongodb = new MongoDB({
-     url: process.env.NEXT_PUBLIC_MONGODB_URI || "mongodb://localhost:27017",
-    dbName: process.env.NEXT_PUBLIC_MONGODB_DB || "socket-test",
-  });
-*/}
-{/*
-    export const mysql = new MySQLDB({
-    host: "localhost",
-    user: "root",
-    port: 3306,
-    database: "socket-test",
-    });
-*/}

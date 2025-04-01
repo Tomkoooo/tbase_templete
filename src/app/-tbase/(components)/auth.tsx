@@ -4,8 +4,11 @@ import React from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { databaseClient } from '@/utils/tbase/bundler';
+import toast from 'react-hot-toast';
+import { redirect } from 'next/navigation';
 
 type RegisterFormData = {
+  name: string;
   email: string;
   password: string;
   passwordAgain: string;
@@ -19,6 +22,7 @@ export const Register = () => {
     watch,
   } = useForm<RegisterFormData>({
     defaultValues: {
+      name: '',
       email: '',
       password: '',
       passwordAgain: '',
@@ -26,9 +30,14 @@ export const Register = () => {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    databaseClient.signUpSuper(data.email, data.password, (asd : any) => {
-      console.log('Regisztrációs adatok:', asd);
-    })
+    databaseClient.users.createUser(data.name, data.email, data.password, true, (res: any) => {
+      if (res.status === 'error') {
+        toast.error(res.message);
+      } else {
+        toast.success('Successfully registered.');
+        redirect('/-tbase/dashboard');
+      }
+    });
   };
 
   const password = watch('password'); // Jelszó figyelése az egyezés ellenőrzéséhez
@@ -45,6 +54,27 @@ export const Register = () => {
         <h2 className="text-2xl font-bold text-center">Register - tBase admin</h2>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-control">
+          <label className="label" htmlFor="name">
+            <span className="label-text">Name</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            placeholder="e.g jhon doe"
+            className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
+            {...register('name', {
+              required: 'Name is required',
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: 'Invalid name',
+              },
+            })}
+          />
+          {errors.name && (
+            <span className="text-error text-sm">{errors.name.message}</span>
+          )}
+        </div>
         <div className="form-control">
           <label className="label" htmlFor="email">
             <span className="label-text">Email</span>
@@ -132,8 +162,15 @@ export const Login = () => {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    console.log('Bejelentkezési adatok:', data);
-    // Itt küldheted el az adatokat egy API-nak, pl. fetch vagy axios segítségével
+    databaseClient.account.signIn(data.email, data.password, true, (res: any) => {
+      if (res.status === 'error') {
+        toast.error(res.message);
+      } else {
+        localStorage.setItem("t_auth_super", res.token); // Token mentése a middleware-nek megfelelően
+        toast.success('Successfully logged in.');
+        redirect('/-tbase/dashboard');
+      }
+    });
   };
 
   return (

@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Comfortaa } from "next/font/google";
 import "./admin.css";
-import { redirect } from "next/navigation";
+import {Toaster} from 'react-hot-toast';
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
@@ -29,6 +29,7 @@ export default async function Layout({
 }>) {
     return (
         <div id="admin" className={`${comfortaa.variable} antialiased min-h-screen`}>
+          <Toaster position="top-left"/>
           {children}
         </div>
     );

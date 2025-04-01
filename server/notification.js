@@ -30,7 +30,7 @@ class Notification {
     console.log('APNs Bundle ID:', this.apnsBundleId);
 
     if (!this.vapidPublicKey || !this.vapidPrivateKey || !this.vapidEmail) {
-      console.warn('VAPID keys and email are required');
+      throw new Error('VAPID keys and email are required');
     }
     if (!this.apnsTeamId || !this.apnsKeyId || !this.apnsKey || !this.apnsBundleId) {
       console.warn('APNs configuration is incomplete');

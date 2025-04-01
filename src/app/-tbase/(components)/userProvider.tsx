@@ -1,5 +1,6 @@
 "use client"
-import React, { createContext, ReactNode, useContext } from 'react';
+import { databaseClient } from '@/utils/tbase/bundler';
+import React, { createContext, ReactNode, useContext, useEffect } from 'react';
 
 // Define the shape of the user object
 interface User {
@@ -11,6 +12,17 @@ const UserContext = createContext<User | null>(null);
 
 // Create a provider component
 const UserProvider = ({ user, children }: { user: User | null, children: ReactNode }) => {
+  const [frontendUser, setFrontendUser] = React.useState<User | null>(user);
+  useEffect(() => {
+    console.log(user)
+    if (!user) {
+      databaseClient.account.getAccount((response: any) => {
+        console.log(response)
+        if (response.status === 'success') {
+          user = response.user;
+        }})
+    }
+  }, [databaseClient]);
   return (
     <UserContext.Provider value={user}>
       {children}
